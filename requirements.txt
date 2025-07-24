@@ -1,6 +1,4 @@
-# requirements.txt
 # Updated to fix compatibility issues and missing packages
-
 torch==2.2.0
 torchmetrics==1.4.0
 ray==2.48.0
@@ -10,3 +8,4 @@ tqdm
 tensorboard
 xxhash
 fire
+open-spiel==1.6
