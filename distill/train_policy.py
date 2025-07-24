@@ -1,5 +1,5 @@
 import torch, tqdm, random, pickle, ray
-from config import CFG
+from config import CFG, device
 from distill.policy_net import PolicyNet
 from play.actor import SearchActor   # produces expert trajectories
 
@@ -17,14 +17,14 @@ def main():
     expert = []
     for d in ray.get(futures): expert.extend(d)
 
-    model = PolicyNet().cuda()
+    model = PolicyNet().to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=CFG["distill"].lr)
     for epoch in range(CFG["distill"].epochs):
         random.shuffle(expert)
         for i in range(0, len(expert), CFG["distill"].batch):
             batch = expert[i : i + CFG["distill"].batch]
-            obs = torch.tensor([b[0] for b in batch]).cuda()
-            act = torch.tensor([b[1] for b in batch]).cuda()
+            obs = torch.tensor([b[0] for b in batch]).to(device)
+            act = torch.tensor([b[1] for b in batch]).to(device)
             logits = model(obs)
             loss = torch.nn.functional.cross_entropy(logits, act)
             loss.backward()

@@ -1,5 +1,6 @@
 from pathlib import Path
 from dataclasses import dataclass
+import torch
 
 ROOT = Path(__file__).parent
 
@@ -49,3 +50,6 @@ CFG = dict(
     search=SearchCfg(),
     distill=DistillCfg(),
 )
+
+# Automatically detect and set the best device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

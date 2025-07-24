@@ -1,3 +1,6 @@
+from config import device
+print(f"🚀 Using device: {device}")
+
 import fire
 from cfr.train_cfr import main as cfr_run
 from value_net.train_value import main as vnet_run

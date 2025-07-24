@@ -1,7 +1,6 @@
-# search/mcts.py
 import time, math, torch
 from value_net.model import TransformerValueNet
-from config import CFG
+from config import CFG, device
 
 class Node:
     def __init__(self, state, parent):
@@ -22,28 +21,28 @@ def select(node, c):
 
 class MCTS:
     def __init__(self):
-        self.vnet = TransformerValueNet()
-        self.vnet.load_state_dict(torch.load(CFG["ckpt_dir"] / "vnet_final.pt"))
-        self.vnet.cuda().eval()
+        self.vnet = TransformerValueNet().to(device)
+        self.vnet.load_state_dict(torch.load(CFG["vnet"].ckpt_dir / "vnet_final.pt"))
+        self.vnet.eval()
 
     @torch.no_grad()
     def search(self, root_state):
         root = Node(root_state.clone(), None)
-        deadline = time.perf_counter() + CFG["search_time"]
+        deadline = time.perf_counter() + CFG["search"].max_search_time
 
         while time.perf_counter() < deadline:
             node = root
             state = root_state.clone()
             while node.children:
-                node = select(node, c=1.4)
+                node = select(node, c=CFG["search"].ucb_c)
                 state.apply_action(node.action)
             if not state.is_terminal():
                 for a in state.legal_actions():
                     st = state.child(a)
                     node.children[a] = Node(st, node)
-                node = select(node, c=1.4)
+                node = select(node, c=CFG["search"].ucb_c)
                 state.apply_action(node.action)
-            leaf_feat = torch.tensor(state.obs()).unsqueeze(0).cuda()
+            leaf_feat = torch.tensor(state.obs()).unsqueeze(0).to(device)
             value = self.vnet(leaf_feat)[0].max().item()
             while node:
                 node.N += 1
