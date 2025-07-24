@@ -1,36 +1,38 @@
-import numpy as np, torch, xxhash
+import numpy as np
+import torch
+import xxhash
 import pyspiel
+
 
 class HoldemNL6:
     """
-    6‑player No‑Limit Hold'em wrapper with
-    - expanded 7‑action discrete set
-    - observation tensor (hole, board, stacks, bets, pot)
+    6‑player No‑Limit Hold'em wrapper using OpenSpiel universal_poker
+    - Expanded 7‑action discrete set
+    - Observation tensor (hole, board, stacks, bets, pot)
     """
 
     _ACTION_SET = np.array([
-        0,   # fold
-        1,   # call / check
-        2,   # 0.25 pot
-        3,   # 0.50 pot
-        4,   # pot
-        5,   # 1.5 pot
-        6    # all‑in
+        0,  # fold
+        1,  # call / check
+        2,  # 0.25 pot
+        3,  # 0.50 pot
+        4,  # pot
+        5,  # 1.5 pot
+        6   # all‑in
     ], dtype=np.int8)
 
     def __init__(self):
         self._game = pyspiel.load_game(
             "universal_poker",
             {
-                "players": 6,
+                "numPlayers": 6,
                 "blind": "100 50",
-                "stack": "20000 20000",
+                "stack": "20000 20000 20000 20000 20000 20000",
                 "betting": "nolimit",
             },
         )
         self._state = self._game.new_initial_state()
 
-    # --- core wrappers --------------------------------------------------- #
     def reset(self):
         self._state = self._game.new_initial_state()
         return self.obs()
@@ -41,13 +43,12 @@ class HoldemNL6:
         return self.obs(), self.done(), self._state.returns()
 
     def obs(self):
-        # Example: concatenate 52‑card binary vectors, stacks, pot, etc.
-        return np.concatenate([...])
+        # ⚠️ Placeholder observation vector — update this with real features
+        return np.zeros(400, dtype=np.float32)
 
     def done(self):
         return self._state.is_terminal()
 
-    # --- helpers --------------------------------------------------------- #
     def legal_action_ids(self):
         legal = self._state.legal_actions()
-        return [np.where(self._ACTION_SET == a)[0][0] for a in legal]
+        return [np.where(self._ACTION_SET == a)[0][0] for a in legal if a in self._ACTION_SET]

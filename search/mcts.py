@@ -1,6 +1,6 @@
 import time, math, torch
-from value_net.model import TransformerValueNet
 from config import CFG, device
+from value_net.model import TransformerValue
 
 class Node:
     def __init__(self, state, parent):
@@ -21,7 +21,7 @@ def select(node, c):
 
 class MCTS:
     def __init__(self):
-        self.vnet = TransformerValueNet().to(device)
+        self.vnet = TransformerValue(CFG["vnet"]).to(device)
         self.vnet.load_state_dict(torch.load(CFG["vnet"].ckpt_dir / "vnet_final.pt"))
         self.vnet.eval()
 

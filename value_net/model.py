@@ -1,4 +1,6 @@
-import torch, torch.nn as nn
+# value_net/model.py
+import torch
+import torch.nn as nn
 from torch.nn import functional as F
 
 class TransformerValue(nn.Module):
@@ -11,7 +13,7 @@ class TransformerValue(nn.Module):
             cfg.model_dim, cfg.heads, cfg.model_dim * 4, batch_first=True
         )
         self.tr = nn.TransformerEncoder(encoder, cfg.depth)
-        self.out = nn.Linear(cfg.model_dim, 7)   # 7 action Q‑values
+        self.out = nn.Linear(cfg.model_dim, 7)   # 7 action Q-values
 
     def forward(self, x):
         x = self.embed(x)

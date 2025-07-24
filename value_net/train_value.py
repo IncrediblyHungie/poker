@@ -1,18 +1,18 @@
-import torch, torchmetrics, tqdm
+import torch, tqdm
 from torch.utils.data import DataLoader
 from config import CFG, device
 from value_net.dataset import CFRDataset
-from value_net.model import TransformerValueNet
+from value_net.model import TransformerValue
 
 def main():
     ds = CFRDataset(CFG["cfr"].storage)
     dl = DataLoader(ds, batch_size=CFG["vnet"].batch_size, shuffle=True, num_workers=4, pin_memory=True)
-    model = TransformerValueNet().to(device)
+    model = TransformerValue(CFG["vnet"]).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=CFG["vnet"].lr)
     scaler = torch.cuda.amp.GradScaler(enabled=CFG["vnet"].fp16)
 
     for epoch in range(CFG["vnet"].epochs):
-        pbar = tqdm.tqdm(dl, desc=f"epoch {epoch}")
+        pbar = tqdm.tqdm(dl, desc=f"Epoch {epoch}")
         for obs, tgt in pbar:
             obs, tgt = obs.to(device), tgt.to(device)
             with torch.cuda.amp.autocast(enabled=CFG["vnet"].fp16):
