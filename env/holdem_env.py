@@ -23,25 +23,9 @@ class HoldemNL6:
     ], dtype=np.int8)
 
     def __init__(self):
-        # Inline ACPC‑style GAMEDEF. **First token after GAMEDEF must be “nolimit”.**
-        # OpenSpiel requires exactly six blind values (one per seat). Here we
-        # set SB = 100, BB = 50, and 0 for the remaining four players.
+        # Use external .game file since inline 'gamedef' is not supported in all builds
         self._game = pyspiel.load_game("universal_poker", {
-            "gamedef": (
-                "GAMEDEF\n"
-                "nolimit\n"
-                "numPlayers   = 6\n"
-                "numRounds    = 4\n"
-                "blind        = 100 50 0 0 0 0\n"  # <-- six integers
-                "firstPlayer  = 2\n"
-                "maxRaises    = 255\n"
-                "raiseSize    = 0\n"      # ignored for NLH
-                "numSuits     = 4\n"
-                "numRanks     = 13\n"
-                "numHoleCards = 2\n"
-                "numBoardCards= 0 3 1 1\n"  # flop‑turn‑river
-                "stack        = 20000 20000 20000 20000 20000 20000\n"
-            )
+            "gamedef_file": "env/6p_nolimit.game"
         })
         self._state = self._game.new_initial_state()
 
