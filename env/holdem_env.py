@@ -3,19 +3,19 @@ import pyspiel
 
 class HoldemNL6:
     """
-    6‑player No‑Limit Hold'em wrapper with
-    - expanded 7‑action discrete set
-    - observation tensor (hole, board, stacks, bets, pot)
+    6‑player No‑Limit Hold'em wrapper with:
+    - Expanded 7‑action discrete set
+    - Observation tensor (hole, board, stacks, bets, pot)
     """
 
     _ACTION_SET = np.array([
-        0,   # fold
-        1,   # call / check
-        2,   # 0.25 pot
-        3,   # 0.50 pot
-        4,   # pot
-        5,   # 1.5 pot
-        6    # all‑in
+        0,  # fold
+        1,  # call / check
+        2,  # 0.25 pot
+        3,  # 0.50 pot
+        4,  # pot
+        5,  # 1.5 pot
+        6   # all‑in
     ], dtype=np.int8)
 
     def __init__(self):
@@ -23,8 +23,8 @@ class HoldemNL6:
             "universal_poker",
             {
                 "numPlayers": 6,
-                "blind": "100 50",
-                "stack": "20000 20000 20000 20000 20000 20000",  # Fixed: 6 stack values
+                "blind": "100 50 0 0 0 0",  # First two are SB and BB
+                "stack": "20000 20000 20000 20000 20000 20000",
                 "betting": "nolimit",
             },
         )
@@ -41,8 +41,9 @@ class HoldemNL6:
         return self.obs(), self.done(), self._state.returns()
 
     def obs(self):
-        # Example: concatenate 52‑card binary vectors, stacks, pot, etc.
-        return np.concatenate([...])
+        # Placeholder: implement observation logic
+        # Example: return np.concatenate([hole_cards, board, stacks, bets, pot])
+        return np.zeros(100, dtype=np.float32)  # dummy
 
     def done(self):
         return self._state.is_terminal()
