@@ -22,7 +22,7 @@ class HoldemNL6:
         self._game = pyspiel.load_game(
             "universal_poker",
             {
-                "players": 6,
+                "numPlayers": 6,
                 "blind": "100 50",
                 "stack": "20000 20000",
                 "betting": "nolimit",
