@@ -24,7 +24,7 @@ class HoldemNL6:
             {
                 "numPlayers": 6,
                 "blind": "100 50",
-                "stack": "20000 20000",
+                "stack": "20000 20000 20000 20000 20000 20000",  # Fixed: 6 stack values
                 "betting": "nolimit",
             },
         )
