@@ -23,14 +23,13 @@ class HoldemNL6:
             "universal_poker",
             {
                 "numPlayers": 6,
-                "blind": "100 50 0 0 0 0",  # First two are SB and BB
+                "blind": "100 50 0 0 0 0",  # Small blind, big blind, rest zero
                 "stack": "20000 20000 20000 20000 20000 20000",
                 "betting": "nolimit",
             },
         )
         self._state = self._game.new_initial_state()
 
-    # --- core wrappers --------------------------------------------------- #
     def reset(self):
         self._state = self._game.new_initial_state()
         return self.obs()
@@ -41,14 +40,12 @@ class HoldemNL6:
         return self.obs(), self.done(), self._state.returns()
 
     def obs(self):
-        # Placeholder: implement observation logic
-        # Example: return np.concatenate([hole_cards, board, stacks, bets, pot])
-        return np.zeros(100, dtype=np.float32)  # dummy
+        # Placeholder observation logic: 100 zeros
+        return np.zeros(100, dtype=np.float32)
 
     def done(self):
         return self._state.is_terminal()
 
-    # --- helpers --------------------------------------------------------- #
     def legal_action_ids(self):
         legal = self._state.legal_actions()
         return [np.where(self._ACTION_SET == a)[0][0] for a in legal]
