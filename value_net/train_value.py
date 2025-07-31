@@ -11,7 +11,7 @@ def main():
     opt = torch.optim.AdamW(model.parameters(), lr=CFG["vnet"].lr)
     scaler = torch.cuda.amp.GradScaler(enabled=CFG["vnet"].fp16)
 
-    for epoch in range(CFG["vnet"].epochs]):
+    for epoch in range(CFG["vnet"].epochs):
         pbar = tqdm.tqdm(dl, desc=f"epoch {epoch}")
         for obs, tgt in pbar:
             obs, tgt = obs.cuda(), tgt.cuda()
