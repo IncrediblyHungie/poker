@@ -48,4 +48,9 @@ class HoldemNL6:
 
     def legal_action_ids(self):
         legal = self._state.legal_actions()
-        return [np.where(self._ACTION_SET == a)[0][0] for a in legal]
+        ids = []
+        for a in legal:
+            idx = np.where(self._ACTION_SET == a)[0]
+            if idx.size:  # ignore actions outside our discrete set
+                ids.append(int(idx[0]))
+        return ids
